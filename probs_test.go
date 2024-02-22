@@ -2,6 +2,8 @@ package problems
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGenerateFillInTheBlankProblems(t *testing.T) {
@@ -56,9 +58,11 @@ func TestGenerateMultiChoiceProblems(t *testing.T) {
 			Definitions: []string{"The study of past events and how they influence the present", "Can include topics like politics, wars, and culture"},
 		},
 	}
-	expectedLen := 4
 	res := GenerateMultiChoiceProblems(cards)
-	if len(res) != expectedLen {
-		t.Errorf("GenerateMultiChoiceProblems failed, expected %d problems but got %d", expectedLen, len(res))
+	assert.Len(t, res, len(cards))
+	for i, prob := range res {
+		assert.Equal(t, cards[i].Word, prob.Answer)
+		assert.Contains(t, cards[i].Definitions, prob.Question)
+		assert.Contains(t, prob.Choices, prob.Answer)
 	}
 }

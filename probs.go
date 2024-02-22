@@ -1,6 +1,7 @@
 package problems
 
 import (
+	"math/rand"
 	"strings"
 
 	"github.com/STRockefeller/problems/internal/fp"
@@ -46,11 +47,13 @@ type MultiChoiceProblem struct {
 }
 
 func generateChoices(words []string, ans string) []string {
-	choices := random.AmountOf(words, 4)
-	if lo.Contains(choices, ans) {
-		return choices
-	}
-	return generateChoices(words, ans)
+	choices := make([]string, 0, 4)
+	choices = append(choices, ans)
+	choices = append(choices, random.AmountOf(lo.Filter(words, func(item string, index int) bool {
+		return item != ans
+	}), 3)...)
+	rand.Shuffle(len(choices), func(i, j int) { choices[i], choices[j] = choices[j], choices[i] })
+	return choices
 }
 
 func GenerateMultiChoiceProblems(cards []FlashCard) []MultiChoiceProblem {
